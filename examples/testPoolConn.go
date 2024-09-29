@@ -1,3 +1,12 @@
+// testPoolConn
+// examples of the usage of pgx
+// simple connection
+// author prr, azul software
+// date: 25 Sept 2024
+// copyright 2024 prr, azul softwre
+//
+
+
 package main
 
 import (
