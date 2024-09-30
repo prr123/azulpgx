@@ -1,6 +1,8 @@
-// conSelectQuery
+// conQuery
 // examples of the usage of pgx
 // simple connection
+// perform a query to retrieve data from a table
+//
 // author prr, azul software
 // date: 25 Sept 2024
 // copyright 2024 prr, azul softwre
@@ -21,6 +23,7 @@ func main() {
 
 	ctx := context.Background()
 	dburl :="postgresql://dbuser:dbtest@/testdb"
+
 	dbcon, err := pgx.Connect(ctx, dburl)
 	if err != nil {
 		fmt.Printf("error -- Unable to create connection: %v\n", err)
