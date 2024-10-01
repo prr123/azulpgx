@@ -19,6 +19,12 @@ import (
 	"github.com/jackc/pgx/v5"
 )
 
+type pers struct {
+	Schemaname string `db:"schemaname"`
+	Tablename string `db:"tablename"`
+	Tableowner string `db:"tableowner"`
+}
+
 func main() {
 
 	ctx := context.Background()
@@ -48,7 +54,29 @@ func main() {
       		fmt.Errorf("error row[%d] -- unable to scan row: %w", count, err)
 			os.Exit(1)
     	}
-		fmt.Printf("roe[%d]: %s %s %s\n", count, schema, table, owner)
+		fmt.Printf("row[%d]: %s %s %s\n", count, schema, table, owner)
 	}
+
+	// alternative
+    nrows, err := dbcon.Query(ctx, query)
+    if err != nil {
+		fmt.Printf("error -- query failed: %v\n", err)
+		os.Exit(1)
+	}
+	defer nrows.Close()
+
+	fmt.Println("query success!")
+
+	persList, err := pgx.CollectRows(nrows, pgx.RowToStructByName[pers])
+	if err != nil {
+		fmt.Printf("error -- failed collecting rows: %v\n", err)
+		os.Exit(1)
+	}
+
+	fmt.Printf("pers list: %d\n", len(persList))
+	for _, per := range persList {
+		fmt.Printf("%#v\n", per)
+	}
+
 	fmt.Println("*** success ***")
 }
