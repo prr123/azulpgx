@@ -11,7 +11,7 @@ package pgxlib
 import (
 //    "context"
 //    "log"
-//    "fmt"
+    "fmt"
 //    "os"
     "github.com/jackc/pgx/v5"
 )
@@ -28,10 +28,11 @@ type pgxlib struct {
 
 }
 
-func InitPglib(con *pgx.Conn) (pglib *pgxlib) {
+func InitPgLib(con *pgx.Conn) (pglib *pgxlib, err error) {
+	if con == nil {return nil, fmt.Errorf("no conn!")}
 	pglib = &pgxlib{}
 	pglib.con = con
-	return pglib
+	return pglib, nil
 }
 
 func (pl *pgxlib) GetColInfo(tbl string)(pgcols []PgCol, err error) {
