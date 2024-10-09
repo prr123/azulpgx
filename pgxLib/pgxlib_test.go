@@ -17,8 +17,11 @@ func TestInit(t *testing.T) {
     if err != nil {t.Fatalf("error -- Unable to create connection: %v\n", err)}
     defer dbcon.Close(ctx)
 
-	pglib := InitPgLib(dbcon)
+	pglib, err := InitPgLib(dbcon)
+	if err != nil {t.Fatalf("error -- InitPgLib: %v\n", err)}
 
-	if pglib == nil {}
+	if pglib.con == nil {t.Fatalf("error -- Unable to init pflib\n")}
+
+
 }
 
