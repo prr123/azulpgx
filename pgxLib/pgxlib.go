@@ -80,7 +80,7 @@ func (pl *pgxlib) GetColInfoV2(tbl string)(pgcols []PgCol, err error) {
     sql := `select column_name, data_type, coalesce(character_maximum_length, -1) as maxchar, coalesce(numeric_precision, -1) as prec 
 from information_schema.columns where table_name = $1;`
 
-	fmt.Printf("sql: %s\n",sql)
+//	fmt.Printf("sql: %s\n",sql)
 	ctx := pl.ctx
 	dbcon := pl.con
 
@@ -97,4 +97,33 @@ from information_schema.columns where table_name = $1;`
     }
 
 	return pgcols, nil
+}
+
+func (pl *pgxlib) GetChannels()(listChan []string, err error) {
+
+	sql := "select * FROM pg_listening_channels();"
+
+	ctx := pl.ctx
+	dbcon := pl.con
+
+	rows, err := dbcon.Query(ctx, sql)
+    if err != nil {
+        return listChan, fmt.Errorf("query failed: %v\n", err)
+    }
+    defer rows.Close()
+
+	var newChan string
+	count:= 0
+    for rows.Next() {
+        count++
+        err = rows.Scan(&newChan)
+        if err != nil {
+            return listChan, fmt.Errorf("error row[%d] -- unable to scan row: %w", count, err)
+        }
+//        fmt.Printf("row[%d]: %s %s %d %d\n", count, ColNam, DTyp, MaxChars, Prec)
+        fmt.Printf("row[%d]: %-15s\n", count, newChan)
+    }
+    rows.Close()
+
+	return listChan, nil
 }
