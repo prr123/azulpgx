@@ -69,3 +69,23 @@ func TestGetCols2(t *testing.T) {
 
 	}
 }
+
+
+func TestListChannels(t *testing.T) {
+
+    ctx := context.Background()
+    dburl :="postgresql://dbuser:dbtest@/testdb"
+    dbcon, err := pgx.Connect(ctx, dburl)
+    if err != nil {t.Fatalf("error -- Unable to create connection: %v\n", err)}
+    defer dbcon.Close(ctx)
+
+    pglib, err := InitPgLib(dbcon)
+    if err != nil {t.Fatalf("error -- InitPgLib: %v\n", err)}
+//	fmt.Println("init")
+	pglib.ctx = ctx
+
+	chanList, err := pglib.GetChannels()
+    if err != nil {t.Fatalf("error -- GetChannels: %v\n", err)}
+
+
+}
